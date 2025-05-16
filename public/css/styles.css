@@ -4,3 +4,225 @@
 *:after {
   box-sizing: border-box;
 }
+
+.header
+{
+  font-size: 40px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-left: 8px;
+}
+
+.account
+{
+  font-size: 18px;
+  font-family:Arial, Helvetica, sans-serif;
+  font-weight: 50;
+}
+
+#top-header
+{
+  display: flex;
+  gap: 9rem;
+}
+
+ul
+{
+  display: flex;
+  align-items: center;
+  list-style-type: disc;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0px;
+  unicode-bidi: isolate;
+  background-color: #242333;
+}
+
+li
+{
+  margin: 19px;
+  color: aliceblue;
+}
+
+nav
+{
+  align-items: center;
+}
+
+.cuadrado
+{
+  background-color: rgb(245, 245, 245,0.8);
+  color: rgb(45, 76, 104);
+  position: relative;
+  left: 10px;
+  bottom: 190px;
+  width: 150px;
+  padding-bottom: 10px;
+  padding-right: 0;
+}
+
+.cuadrado a
+{
+  text-align: center;
+  padding: 10px;
+  background-color: #01B0D3;
+  border-top: 20px;
+  
+}
+
+.cuadrado h2
+{
+  font-size: 15pt;
+  margin-bottom: 5px;
+}
+.cuadrado h3
+{
+  margin: 2px;
+  font-size: 100%;
+} 
+
+#fuzzy
+{
+  margin-bottom:20px;
+}
+
+
+#reviews
+{
+  display:block;
+  background-color: rgb(255, 255, 255);
+}
+
+#reviewli
+{
+  color: black;
+}
+
+#littlebox
+{
+  justify-items: center;
+}
+
+.reviews 
+{
+  margin-top: 0;
+}
+
+.mainbox
+{
+  display: block;
+}
+
+.car
+{
+  height: 12rem;
+}
+
+#icons
+{
+  background-color: #01B0D3;
+  justify-self: center;
+  padding-left: 20%;
+  padding-right: 20%;
+  border: 2px solid black 
+}
+
+
+#upgrades {
+  align-content: center;
+  display: grid;
+  gap: 3rem; /* optional spacing between items */
+  justify-content: center;
+}
+
+#upgrades1
+{
+  display: grid;
+  grid-template-columns: 100px 100px;
+  gap: 60px;
+}
+
+#carid
+{
+ width: 22rem;
+}
+
+#updateslinks
+{
+  font-size: 12px;
+}
+
+@media (min-width: 768px) {
+
+    #upgrades1
+    {
+      gap: 10px;
+      justify-content: center;
+    }
+  
+    #upgrades
+    {
+      max-width: 25rem;
+      gap: 0;
+      grid-area: upgrades;
+    }
+
+    #upgrades h1
+    {
+      font-size: 17pt;
+    }
+
+    .reviews
+    {
+      max-width: 25rem;
+      justify-content: center;
+      grid-area: reviews;
+    }
+
+    .car
+    {
+      max-width: 25rem;
+    }
+
+    .ingrid
+    {
+      display: grid;
+      grid-template-columns: 25rem 25rem;
+      grid-template-areas: "upgrades reviews";
+      gap: 2px;
+      justify-content: center;
+    }
+
+     #upgrades
+    {
+      max-width: 25rem;
+      gap: 0;
+      grid-area: upgrades;
+    }
+
+     .reviews
+    {
+      max-width: 25rem;
+      justify-content: center;
+      grid-area: reviews;
+    }
+
+    .mainbox
+    {
+      justify-items: center;
+    }
+
+    #nav
+    {
+      justify-content: center;
+      gap: 80px;
+    }
+
+    #top-header
+    {
+      justify-content: space-between;
+      align-items: center;
+      margin-right: 13px;
+    }
+
+}
+
