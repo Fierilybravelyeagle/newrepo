@@ -13,30 +13,35 @@ const utilities = require("./utilities");
 const app = express();
 
 const baseController = require("./controllers/baseController");
-const staticRoutes = require("./routes/static"); // Make sure this exports a Router
-const inventoryRoutes = require("./routes/inventoryRoute"); // Make sure file is named exactly this or change accordingly
+const staticRoutes = require("./routes/static");
+const inventoryRoutes = require("./routes/inventoryRoute");
+const detailRoutes = require("./routes/detailRoute"); // ✅ Make sure this file exists
 
 /* ***********************
  * View Engine and Templates
  *************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
-app.set("layout", "./layouts/layout"); // Make sure views/layouts/layout.ejs exists
-app.use(express.static("public")); // Serve static files from /public
+app.set("layout", "./layouts/layout"); // ✅ layout.ejs should be in views/layouts/
+app.use(express.static("public")); // ✅ Serve static assets from /public
 
 /* ***********************
  * Routes
  *************************/
-// Static routes (e.g., about, contact pages, etc.)
+
+// Home page route (✅ must come before staticRoutes if both use "/")
+app.get("/", utilities.handleErrors(baseController.buildHome));
+
+// Static routes (e.g., about, contact)
 app.use("/", staticRoutes);
 
-// Home page route
-app.get("/", baseController.buildHome);
+// Inventory routes (listing + detail)
+app.use("/inv/detail", detailRoutes); // ✅ More specific route goes first
+app.use("/inv", inventoryRoutes); // ✅ Then general inventory listing
 
-// Inventory routes mounted at /inv
-app.use("/inv", inventoryRoutes);
-
-// File Not Found Route - must be last route in list
+/* ***********************
+ * 404 Handler - Must be last
+ *************************/
 app.use(async (req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." });
 });
@@ -48,9 +53,13 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  res.render("errors/error", {
+  const message =
+    err.status == 404
+      ? err.message
+      : "Oh no! There was a crash. Maybe try a different route?";
+  res.status(err.status || 500).render("errors/error", {
     title: err.status || "Server Error",
-    message: err.message,
+    message,
     nav,
   });
 });

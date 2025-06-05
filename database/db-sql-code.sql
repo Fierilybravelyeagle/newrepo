@@ -33,17 +33,13 @@ CREATE TABLE IF NOT EXISTS public.account (
   account_type account_type NOT NULL DEFAULT 'Client'::account_type,
   CONSTRAINT account_pkey PRIMARY KEY (account_id)
 );
-
 -- Insert data into the classification table
 INSERT INTO public.classification (classification_name)
-VALUES 
-    ('Custom'),
-    ('Sport'),
-    ('SUV'),
-    ('Truck'),
-    ('Sedan');
-
-
+VALUES ('Custom'),
+  ('Sport'),
+  ('SUV'),
+  ('Truck'),
+  ('Sedan');
 INSERT INTO public.inventory (
     inv_make,
     inv_model,
@@ -56,7 +52,7 @@ INSERT INTO public.inventory (
     inv_color,
     classification_id
   )
-VALUES   (
+VALUES (
     'Chevy',
     'Camaro',
     '2018',
@@ -67,7 +63,8 @@ VALUES   (
     101222,
     'Silver',
     2
-  ), (
+  ),
+  (
     'Batmobile',
     'Custom',
     '2007',
@@ -78,7 +75,8 @@ VALUES   (
     29887,
     'Black',
     1
-  ), (
+  ),
+  (
     'FBI',
     'Surveillance Van',
     '2016',
@@ -89,7 +87,8 @@ VALUES   (
     19851,
     'Brown',
     1
-  ), (
+  ),
+  (
     'Dog ',
     'Car',
     '1997',
@@ -100,7 +99,8 @@ VALUES   (
     71632,
     'White',
     1
-  ), (
+  ),
+  (
     'Jeep',
     'Wrangler',
     '2019',
@@ -111,7 +111,8 @@ VALUES   (
     41205,
     'Yellow',
     3
-  ), (
+  ),
+  (
     'Lamborghini',
     'Adventador',
     '2016',
@@ -122,7 +123,8 @@ VALUES   (
     71003,
     'Blue',
     2
-  ), (
+  ),
+  (
     'Aerocar International',
     'Aerocar',
     '1963',
@@ -133,7 +135,8 @@ VALUES   (
     18956,
     'Red',
     1
-  ), (
+  ),
+  (
     'Monster',
     'Truck',
     '1995',
@@ -144,7 +147,8 @@ VALUES   (
     3998,
     'purple',
     1
-  ), (
+  ),
+  (
     'Cadillac',
     'Escalade',
     '2019',
@@ -155,7 +159,8 @@ VALUES   (
     41958,
     'Black',
     4
-  ), (
+  ),
+  (
     'GM',
     'Hummer',
     '2016',
@@ -166,7 +171,8 @@ VALUES   (
     56564,
     'Yellow',
     4
-  ), (
+  ),
+  (
     'Mechanic',
     'Special',
     '1964',
@@ -177,7 +183,8 @@ VALUES   (
     200125,
     'Rust',
     5
-  ), (
+  ),
+  (
     'Ford',
     'Model T',
     '1921',
@@ -188,7 +195,8 @@ VALUES   (
     26357,
     'Black',
     5
-  ), (
+  ),
+  (
     'Mystery',
     'Machine',
     '1999',
@@ -211,7 +219,8 @@ VALUES   (
     38522,
     'Red',
     4
-  ), (
+  ),
+  (
     'Ford',
     'Crown Victoria',
     '2013',
@@ -223,13 +232,9 @@ VALUES   (
     'White',
     5
   );
-
 UPDATE inventory
-SET inv_description = REPLACE(inv_description, 'small','a huge')
-WHERE inv_id =10;
-
-UPDATE 
-inventory
-SET inv_image = REPLACE(inv_image,'/images','/images/vehicles'),
-inv_thumbnail = REPLACE(inv_thumbnail,'/images','/images/vehicles');
-
+SET inv_description = REPLACE(inv_description, 'small', 'a huge')
+WHERE inv_id = 10;
+UPDATE inventory
+SET inv_image = REPLACE(inv_image, '/images', '/images/vehicles'),
+  inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vehicles');
