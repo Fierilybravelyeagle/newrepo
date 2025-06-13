@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || "Add Classification" %></title>
+</head>
+<body>
+  <h1>Add New Classification</h1>
+
+  <div class="form-wrapper">
+    <form action="inv/AddNewClassification" method="POST" id="classificationForm">
+      <label for="classification_name">Classification Name</label>
+      <input 
+        type="text" 
+        id="classification_name" 
+        name="classification_name" 
+        required 
+        pattern="^[A-Za-z]+$"
+        title="Name must be alphabetic characters only. No spaces or special characters.">
+
+      <p class="error" id="nameError" style="display:none;">
+        Name must only contain alphabetic characters. No spaces or special characters allowed.
+      </p>
+
+      <button type="submit">Add Classification</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('classificationForm').addEventListener('submit', function (e) {
+      const nameField = document.getElementById('classification_name');
+      const errorMsg = document.getElementById('nameError');
+      const pattern = /^[A-Za-z]+$/;
+
+      if (!pattern.test(nameField.value)) {
+        e.preventDefault();
+        errorMsg.style.display = 'block';
+      } else {
+        errorMsg.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

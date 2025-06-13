@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'Login' %></title>
+</head>
+<body>
+   <% if (title) { %>
+    <h1><%= title %></h1>
+  <% } %>
+
+  <% if (messages) { %>
+    <%- messages() %>
+  <% } %>
+
+  <% if (Array.isArray(errors) && errors.length > 0) { %>
+    <ul class="notice">
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form id="loginForm" action="/account/login" method="POST">
+    <label for="account_email">Email:</label><br>
+    <input type="email" id="accountEmailname" name="account_email" required value="<% locals.account_email %>"><br><br>
+
+    <label for="account_password">Password:</label><br>
+    <input type="password" id="password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"><br><br>
+
+    <a>12 characters in length, minimum
+      contain at least 1 capital letter
+      contain at least 1 number   
+      contain at least 1 special character</a>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>Don't have an account? 
+    <a href="/account/register">Register here</a>.
+  </p>
+</body>
+</html>
