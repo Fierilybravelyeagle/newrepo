@@ -43,4 +43,19 @@ router.post(
   utilities.handleErrors(AddNewInventoryController.AddedNewInventory)
 );
 
+// Route to build inventory by classification view
+router.get("/", manageController.buildManagementView);
+
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+);
+
+router.get ("/edit/:inventory_id", utilities.handleErrors(invController.buildItemIditingForm));
+
+router.post("/update/",
+  invValidate.invRules(),
+  invValidate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory))
+
 module.exports = router;

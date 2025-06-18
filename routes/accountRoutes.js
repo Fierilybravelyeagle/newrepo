@@ -2,29 +2,35 @@ const express = require("express");
 const router = new express.Router();
 const accountController = require("../controllers/accountController");
 const utilities = require("../utilities");
-const regValidate = require("../utilities/account-validation");
-const logValidate = require("../utilities/account-validation");
+const validate = require("../utilities/account-validation");
+const manageController = require("../controllers/manageController");
 
-// ✅ Ruta GET para mostrar la vista de login
+// Vistas
 router.get("/login", utilities.handleErrors(accountController.buildLoginView));
 
-// ✅ Ruta GET para mostrar la vista de registro
-router.get("/register", utilities.handleErrors(accountController.buildRegisterView));
+router.get(
+  "/register",
+  utilities.handleErrors(accountController.buildRegisterView)
+);
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.loggedAccount)
+);
 
-// ✅ Ruta POST para procesar el registro
+// Procesos
 router.post(
   "/register",
-  regValidate.registationRules(), // <- nombre mal escrito mantenido a propósito
-  regValidate.checkRegData,
+  validate.registrationRules(),
+  validate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
 );
 
-// ✅ Ruta POST para procesar el login
 router.post(
   "/login",
-  logValidate.loginRules(),
-  logValidate.checkLogData,
-  utilities.handleErrors(accountController.loginAccount)
+  validate.loginRules(),
+  validate.checkLogData,
+  utilities.handleErrors(accountController.accountLogin)
 );
 
 module.exports = router;

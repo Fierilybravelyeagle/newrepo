@@ -7,6 +7,8 @@ const pool = require("./database/");
 /* ***********************
  * Require Statements
  *************************/
+
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 require("dotenv").config();
@@ -24,6 +26,8 @@ const bodyParser = require("body-parser");
 /* ***********************
  * Middleware
  *************************/
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 app.use(
   session({
     store: new (require("connect-pg-simple")(session))({
@@ -37,6 +41,8 @@ app.use(
   })
 );
 
+app.use(cookieParser());
+app.use(utilities.checkJWTToken);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

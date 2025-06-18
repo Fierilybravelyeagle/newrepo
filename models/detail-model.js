@@ -30,6 +30,26 @@ async function getDetailByInvId(inv_id) {
     throw error;
   }
 }
+/* ***************************
+ *  Get inventory item by inv_id
+ * ************************** */
+async function getDataByInvId(inv_id) {
+  try {
+    const data = await pool.query(
+      `
+      SELECT *
+      FROM public.inventory AS i
+      WHERE i.inv_id = $1
+      `,
+      [inv_id]
+    );
 
+    // ✅ Return only one row (the object)
+    return data.rows[0];
+  } catch (error) {
+    console.error("Error in getDetailByInvId:", error);
+    throw error;
+  }
+}
 
-module.exports = { getDetails, getDetailByInvId };
+module.exports = { getDetails, getDetailByInvId, getDataByInvId };
