@@ -1,33 +1,36 @@
 /******************************************
  * server.js - Primary application file
- *******************************************/
+ ******************************************/
 const session = require("express-session");
 const pool = require("./database/");
 
 /* ***********************
  * Require Statements
  *************************/
-
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 require("dotenv").config();
 const utilities = require("./utilities");
+const bodyParser = require("body-parser");
+const connectFlash = require("connect-flash");
 
 const app = express();
 
+// Route modules
 const baseController = require("./controllers/baseController");
 const staticRoutes = require("./routes/static");
 const inventoryRoutes = require("./routes/inventoryRoute");
 const detailRoutes = require("./routes/detailRoute");
 const accountRoutes = require("./routes/accountRoutes");
-const bodyParser = require("body-parser");
 
 /* ***********************
  * Middleware
  *************************/
+// Ignore favicon requests
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
+// Configure session storage
 app.use(
   session({
     store: new (require("connect-pg-simple")(session))({
@@ -41,15 +44,27 @@ app.use(
   })
 );
 
+// Parse cookies
 app.use(cookieParser());
+
+// Check JWT and login status
 app.use(utilities.checkJWTToken);
+app.use(utilities.checkLoginStatus);
+
+// Parse form and JSON data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Express Messages Middleware
-app.use(require("connect-flash")());
+// Flash messages
+app.use(connectFlash());
 app.use(function (req, res, next) {
   res.locals.messages = require("express-messages")(req, res);
+  next();
+});
+
+// Global nav for all views
+app.use(async (req, res, next) => {
+  res.locals.nav = await utilities.getNav();
   next();
 });
 
@@ -62,31 +77,20 @@ app.set("layout", "./layouts/layout");
 app.use(express.static("public"));
 
 /* ***********************
- * Handle well-known paths (e.g., Chrome dev tools, cert verifications)
+ * Special Paths
  *************************/
 app.get("/.well-known/*", (req, res) => {
-  res.status(204).end(); // No Content - gracefully handle unknown well-known requests
+  res.status(204).end();
 });
 
 /* ***********************
  * Routes
  *************************/
-
-// Home page route
 app.get("/", utilities.handleErrors(baseController.buildHome));
-
-// Static routes
 app.use("/", staticRoutes);
-
-// Inventory routes (detail must come before general)
 app.use("/inv/detail", detailRoutes);
-app.use("/inv", inventoryRoutes); // ✅ Aquí está lo correcto
-
-// Account routes
+app.use("/inv", inventoryRoutes);
 app.use("/account", accountRoutes);
-
-// ❌ Esta línea causa conflictos de ruta y debe ser eliminada:
-// app.use("/", inventoryRoutes); <--- REMOVIDA
 
 /* ***********************
  * 404 Handler - Must be last
@@ -96,11 +100,9 @@ app.use(async (req, res, next) => {
 });
 
 /* ***********************
- * Express Error Handler
- * Place after all other middleware
+ * Error Handler
  *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   const message =
     err.status === 404
@@ -109,19 +111,15 @@ app.use(async (err, req, res, next) => {
   res.status(err.status || 500).render("errors/error", {
     title: err.status || "Server Error",
     message,
-    nav,
   });
 });
 
 /* ***********************
- * Local Server Information
+ * Local Server Info
  *************************/
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || "localhost";
 
-/* ***********************
- * Start Server
- *************************/
 app.listen(port, () => {
   console.log(`App listening on http://${host}:${port}`);
 });

@@ -2,6 +2,7 @@ const { body, validationResult } = require("express-validator");
 const utilities = require("../utilities");
 const validate = {};
 
+
 /**********************************
  *  Vehicle Data Validation Rules
  **********************************/
@@ -159,5 +160,76 @@ validate.checkUpdateData = async (req, res, next) => {
   }
   next();
 };
+
+validate.checkDeleteData = async (req, res, next) => {
+  const {
+    classification_id,
+    inv_make,
+    inv_model,
+    inv_price,
+    inv_year,
+    inv_id
+  } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    let classificationList = await utilities.buildClassificationList(
+      classification_id
+    );
+    let name = `${inv_make} ${inv_model}`;
+
+    res.render("inventory/delete-confirm", {
+      errors: errors.array(),
+      title: "Delete " + name,
+      nav,
+      classificationList,
+      classification_id,
+      inv_make,
+      inv_model,
+      inv_price,
+      inv_year,
+      inv_id
+    });
+    return;
+  }
+  next();
+};
+
+/*check Employee or Admin */
+
+const jwt = require("jsonwebtoken");
+
+validate.checkEmployeeOrAdmin = (req, res, next) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    req.flash("notice", "You must be logged in to access that resource.");
+    return res.redirect("/account/login");
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    const accountType = decoded.account_type;
+
+    if (accountType === "Employee" || accountType === "Admin") {
+      // Attach user data to the request if needed later
+      req.accountData = decoded;
+      return next();
+    } else {
+      req.flash("notice", "Access denied. You are not authorized to view this resource.");
+      return res.redirect("/account/login");
+    }
+
+  } catch (err) {
+    console.error("JWT verification failed:", err);
+    req.flash("notice", "Session expired or invalid. Please log in again.");
+    return res.redirect("/account/login");
+  }
+};
+
+
 
 module.exports = validate;

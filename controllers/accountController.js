@@ -85,7 +85,6 @@ accountController.registerAccount = async (req, res) => {
 accountController.accountLogin = async (req, res) => {
   const nav = await utilities.getNav();
   const { account_email, account_password } = req.body;
-
   const accountData = await accountModel.getAccountByEmail(account_email);
 
   if (!accountData) {
@@ -150,12 +149,110 @@ accountController.accountLogin = async (req, res) => {
 // Render account management view
 accountController.loggedAccount = async (req, res) => {
   const nav = await utilities.getNav();
-  return res.render("account/logged", {
+  return res.render("index", {
     title: "Account Management",
     nav,
     message: req.flash("notice"),
     errors: [],
   });
 };
+
+// Logout: clear cookie and redirect to home
+accountController.logout = (req, res) => {
+  res.clearCookie("jwt");
+  req.flash("notice", "You have been logged out.");
+  res.redirect("/");
+};
+
+// Show update form by ID
+accountController.buildUpdateView = async (req, res) => {
+  const nav = await utilities.getNav();
+  const account_id = req.params.account_id;
+  const accountData = await accountModel.getAccountById(account_id);
+
+  res.render("account/update", {
+    title: "Update Account",
+    nav,
+    accountData,
+    message: req.flash("notice"),
+  });
+};
+
+// Submit account info update
+accountController.updateAccountInfo = async (req, res) => {
+  const nav = await utilities.getNav();
+  const { account_id, account_firstname, account_lastname, account_email } =
+    req.body;
+
+  try {
+    const updateResult = await accountModel.updateAccount(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    );
+
+    if (updateResult) {
+      req.flash("notice", "Account information updated successfully.");
+      res.redirect("/inv");
+    } else {
+      req.flash("notice", "Update failed. Please try again.");
+      res.status(400).render("account/update", {
+        title: "Update Account",
+        nav,
+        accountData: req.body,
+        message: req.flash("notice"),
+      });
+    }
+  } catch (error) {
+    console.error("Error updating account:", error);
+    req.flash("notice", "An error occurred while updating.");
+    res.status(500).render("account/update", {
+      title: "Update Account",
+      nav,
+      message: req.flash("notice"),
+      accountData: req.body,
+    });
+  }
+};
+
+// Submit password update
+accountController.updatePassword = async (req, res) => {
+  const nav = await utilities.getNav();
+  const { account_id, account_password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(account_password, 10);
+    const result = await accountModel.updatePassword(
+      account_id,
+      hashedPassword
+    );
+
+    if (result) {
+      req.flash("notice", "Password updated successfully.");
+      res.redirect("/inv");
+    } else {
+      req.flash("notice", "Password update failed.");
+      res.status(400).render("account/update", {
+        title: "Update Account",
+        nav,
+        message: req.flash("notice"),
+        accountData: req.body,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating password:", error);
+    req.flash("notice", "Something went wrong.");
+    res.status(500).render("account/update", {
+      title: "Update Account",
+      nav,
+      accountData: req.body,
+      message: req.flash("notice"),
+    });
+  }
+};
+
+// Alias for update view (optional)
+accountController.getUpdateAccountView = accountController.buildUpdateView;
 
 module.exports = accountController;

@@ -111,10 +111,7 @@ nav ul li {
   transition: all 0.3s ease;
 }
 
-nav ul li:hover {
-  background-color: #00c2cb;
-  color: #1e1e2f;
-}
+
 
 /******* Responsive Nav ***************/
 @media (min-width: 768px) {
@@ -298,6 +295,11 @@ li {
   max-height: 150px;
   font-size: 11pt;
 
+}
+
+#manageParagraph
+{
+  text-align: left;
 }
 
 .cuadrado a {

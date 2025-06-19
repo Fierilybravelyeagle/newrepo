@@ -1,8 +1,22 @@
 <header id="top-header">
   <span class="siteName">
-    <a style="text-decoration: none; color: inherit;"  href="/"  title="Return to home page">CSE Motors<h1 class="header"></h1></a>
+    <a style="text-decoration: none; color: inherit;" href="/" title="Return to home page">
+      <h1 class="header">CSE Motors</h1>
+    </a>
   </span>
+
   <div id="tools">
-    <a style="text-decoration: none; color: inherit;" title="Click to log in" href="/account/login"><h4 class="account">My Account</h4></a>
+    <% if (loggedin && accountData) { %>
+      <a style="text-decoration: none; color: inherit;" href="/inv" title="Account Management">
+        <h4 class="account">Welcome <%= accountData.account_firstname %></h4>
+      </a>
+      <a style="text-decoration: none; color: inherit;" href="/account/logout" title="Log out">
+        <h4 class="account">Logout</h4>
+      </a>
+    <% } else { %>
+      <a style="text-decoration: none; color: inherit;" href="/account/login" title="Click to log in">
+        <h4 class="account">My Account</h4>
+      </a>
+    <% } %>
   </div>
 </header>

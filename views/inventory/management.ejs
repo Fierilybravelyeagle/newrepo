@@ -5,18 +5,24 @@
   <title><%= title || 'Login' %></title>
 </head>
 <body>
- <h2><a href="/inv/AddNewClassification">Add New Classification</a></h2>
- <h2><a href="/inv/AddNewInventory">Add New Vehicle</a></h2>
- <h2>Manage Inventory</h2>
+  <%- messages() %>
+  <h2>Welcome <%= accountData.account_firstname %></h2>
 
- <p>Select a Classification</p>
- <%- classificationSelect  %>
+  <a href="/account/update/<%= accountData.account_id %>">Update Account Information</a>
 
- <noscript>JavaScript must be enabled to use this page</noscript>
+  <% if (accountData.account_type === 'Employee' || accountData.account_type === 'Admin') { %>
+    <h2>Manage Inventory</h2>
+    <p id="manageParagraph"><a href="/inv/AddNewClassification">Add New Classification</a></p>
+    <p id="manageParagraph"><a href="/inv/AddNewInventory">Add New Vehicle</a></p>
 
- <table id="inventoryDisplay"></table>
+    <p>Select a Classification</p>
+    <%- classificationSelect %>
 
- <script src="../../js/inventory.js"></script>
+    <noscript>JavaScript must be enabled to use this page</noscript>
+
+    <table id="inventoryDisplay"></table>
+    <script src="../../js/inventory.js"></script>
+  <% } %>
 
 </body>
 </html>

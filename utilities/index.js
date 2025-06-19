@@ -3,17 +3,31 @@ const Util = {};
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+
+
+
+Util.requireLogin = (req, res, next) => {
+  if (!res.locals.loggedin) {
+    req.flash("notice", "You must be logged in to access this page.");
+    return res.redirect("/account/login");
+  }
+  next();
+};
+
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function () {
+Util.getNav = async function (req = null) {
+  // Get classifications
   let data = await invModel.getClassifications();
 
+  // Start nav HTML
   let nav = `<nav class="navbar">
     <button class="hamburger" id="hamburger" aria-label="Toggle menu">☰</button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/" title="Home page">Home</a></li>`;
 
+  // Add classification links
   data.rows.forEach((row) => {
     nav += `<li>
       <a href="/inv/type/${row.classification_id}" title="See our inventory of ${row.classification_name} vehicles">
@@ -22,6 +36,21 @@ Util.getNav = async function () {
     </li>`;
   });
 
+  // Show Management link for Employee or Admin
+  if (req?.cookies?.jwt) {
+    try {
+      const decoded = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+      const accountType = decoded.account_type;
+
+      if (accountType === "Employee" || accountType === "Admin") {
+        nav += `<li><a href="/inventory" title="Inventory Management">Management</a></li>`;
+      }
+    } catch (err) {
+      // Token invalid or missing
+    }
+  }
+
+  // Close nav
   nav += `</ul></nav>`;
   return nav;
 };
@@ -190,6 +219,25 @@ Util.checkLogin = (req, res, next) => {
     req.flash("notice", "Please log in.");
     return res.redirect("/account/login");
   }
+};
+
+
+Util.checkLoginStatus = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      res.locals.loggedin = true;
+      res.locals.accountData = decoded;
+    } catch (error) {
+      res.locals.loggedin = false;
+      res.locals.accountData = null;
+    }
+  } else {
+    res.locals.loggedin = false;
+    res.locals.accountData = null;
+  }
+  next();
 };
 
 module.exports = Util;
