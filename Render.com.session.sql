@@ -1,2 +1,3 @@
-DELETE FROM classification
-WHERE classification_name = 'zsfasfcascas';
+UPDATE account
+SET account_type = 'Client'
+WHERE account_id = 3;

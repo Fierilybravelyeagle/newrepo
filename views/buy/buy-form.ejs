@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/buy-form.css">
+</head>
+<body>
+
+  <h1><%= title %></h1>
+
+  <div id="vehicleInfo">
+    <h2 id="carTitle"><%= inv_make %> <%= inv_model %> - $<%= inv_price %></h2>
+    <img id="carImage" src="<%= inv_thumbnail %>" alt="Image of <%= inv_make %> <%= inv_model %>" width="300" />
+    <p id="carYear"><strong>Year:</strong> <%= inv_year %></p>
+    <p id="carMiles"><strong>Miles:</strong> <%= inv_miles.toLocaleString() %></p>
+    <p id="carColor"><strong>Color:</strong> <%= inv_color %></p>
+    <p id="carDescription"><strong>Description:</strong> <%= inv_description %></p>
+  </div>
+
+  <hr />
+
+  <form id="buyForm" action="/buy/confirm" method="post">
+    <input type="hidden" name="inv_id" value="<%= inv_id %>" />
+    <input type="hidden" name="inv_price" value="<%= inv_price %>" />
+
+    <label for="buyer_name">Full Name:</label>
+    <input type="text" name="buyer_name" id="buyer_name" required /><br><br>
+
+    <label for="buyer_email">Email:</label>
+    <input type="email" name="buyer_email" id="buyer_email" required /><br><br>
+
+    <label for="buyer_address">Delivery Address:</label>
+    <textarea name="buyer_address" id="buyer_address" required></textarea><br><br>
+
+    <button type="submit">Confirm Purchase</button>
+  </form>
+
+</body>
+</html>

@@ -23,6 +23,7 @@ const staticRoutes = require("./routes/static");
 const inventoryRoutes = require("./routes/inventoryRoute");
 const detailRoutes = require("./routes/detailRoute");
 const accountRoutes = require("./routes/accountRoutes");
+const buyRoutes = require("./routes/buyRoutes");
 
 /* ***********************
  * Middleware
@@ -91,6 +92,8 @@ app.use("/", staticRoutes);
 app.use("/inv/detail", detailRoutes);
 app.use("/inv", inventoryRoutes);
 app.use("/account", accountRoutes);
+
+app.use("/buy", buyRoutes);
 
 /* ***********************
  * 404 Handler - Must be last

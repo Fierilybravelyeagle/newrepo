@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || "Buy Form" %></title>
+</head>
+<body>
+  <h1><%= title || "Buy Form" %></h1>
+
+  <p>Select a car by classification</p>
+  <%- classificationSelect %>
+
+  <noscript>JavaScript must be enabled to use this page</noscript>
+
+  <table id="inventoryBuyDisplay"></table>
+  <script src="/js/buy.js"></script>
+</body>
+</html>
